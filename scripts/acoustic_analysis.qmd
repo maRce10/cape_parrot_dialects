@@ -1,0 +1,393 @@
+---
+title: Acoustic analysis
+subtitle: Cape parrot vocal dialects
+author: <a href="https://marce10.github.io/">Marcelo Araya-Salas</a>
+date: "`r Sys.Date()`"
+toc: true
+toc-depth: 2
+toc-location: left
+number-sections: true
+highlight-style: pygments
+format:
+  html:
+    df-print: kable
+    code-fold: true
+    code-tools: true
+    css: qmd.css
+editor_options: 
+  chunk_output_type: console
+---
+
+
+<!-- this code add line numbers to code blocks -->
+<!-- only works when code folding is not used in yaml (code_folding: show) -->
+
+```{=html}
+<style>
+body
+  { counter-reset: source-line 0; }
+pre.numberSource code
+  { counter-reset: none; }
+</style>
+```
+
+```{r set root directory, echo = FALSE}
+
+# set working directory as project directory or one directory above,
+rootdir <- try(rprojroot::find_rstudio_root_file(), silent = TRUE)
+if (is(rootdir, "try-error")) rootdir <-  ".."
+knitr::opts_knit$set(root.dir = rootdir)
+
+```
+
+```{r add link to github repo, echo = FALSE, results='asis'}
+
+# print link to github repo if any
+if (file.exists("./.git/config")){
+  config <- readLines("./.git/config")
+  url <- grep("url",  config, value = TRUE)
+  url <- gsub("\\turl = |.git$", "", url)
+  cat("\nSource code and data found at [", url, "](", url, ")", sep = "")
+  }
+
+```
+
+```{r setup style, echo = FALSE, message = FALSE, warning=FALSE}
+
+# options to customize chunk outputs
+knitr::opts_chunk$set(
+  class.source = "numberLines lineAnchors", # for code line numbers
+  tidy.opts = list(width.cutoff = 65), 
+  tidy = TRUE,
+  message = FALSE
+ )
+
+```
+
+
+&nbsp; 
+
+<!-- skyblue box -->
+
+<div class="alert alert-info">
+
+# Purpose
+
+- Measure acoustic structure of cape parrot contact calls
+
+- Compare acoustic dissimilarity between individuals from different localities
+
+</div>
+
+&nbsp; 
+
+
+<!-- light brown box -->
+<div class="alert alert-warning">
+
+# Report overview
+
+  - [Acoustic analysis](#acoustic-analysis)
+  - [Statistical analysis](#statistical-analysis)
+
+</div>
+
+&nbsp;
+
+
+# Load packages {.unnumbered .unlisted}
+
+```{r load packages}
+
+# knitr is require for creating html/pdf/word reports
+# formatR is used for soft-wrapping code
+
+# install/ load packages
+sketchy::load_packages(packages = c("knitr", "formatR", "viridis", "warbleR", github = "maRce10/PhenotypeSpace", "ggplot2"))
+
+source("~/Dropbox/Projects/geographic_call_variation_yellow-naped_amazon/scripts/MRM2.R")
+
+```
+
+# Acoustic analysis
+
+## Format data
+```{r, eval = FALSE}
+
+dat <- read.csv("./data/raw/consolidated_sound_files_CPV_contact_calls_CURATED.csv")
+
+dat <- dat[grep("cape", dat$species, ignore.case = T),]
+table(dat$species)
+
+nrow(dat)
+nrow(st)
+
+all(dat$new_name %in% st$sound.files)
+table(dat$sorted)
+
+dat <- dat[dat$sorted != "delete", ]
+
+unique(dat$new_name)
+ohun::feature_acoustic_data(path = "./data/raw/consolidated_files")
+
+warbleR_options(path = "./data/raw/consolidated_files")
+st <-selection_table(whole.recs = TRUE)
+
+st <- st[st$sound.files %in% dat$new_name, ]
+nrow(st)
+nrow(dat)
+
+st$sorted <- sapply(st$sound.files, function(x) dat$sorted[dat$new_name == x][1])
+
+table(st$sorted)
+
+spectrograms(st, wl = 512, flim = c(0, 10), dest.path = "./data/processed/spectrograms", pal =  viridis, collevels = seq(-100, 0, 5))
+
+spectrograms(st[st$sorted == "unsorted", ], wl = 512, flim = c(0, 10), dest.path = "./data/processed/unsorted_spectrograms", pal =  viridis, collevels = seq(-100, 0, 5))
+
+
+tailor_sels(st, auto.next = TRUE, flim = c(0, 8), collevels = seq(-100, 0, 5))
+
+```
+
+## Make selection table
+```{r, eval = FALSE}
+
+sel_tab <- selection_table(path = "./data/raw/consolidated_files/", whole.recs = TRUE)
+
+tailored <- read.csv("./data/raw/consolidated_files/seltailor_output.csv")
+
+tailored <- tailored[tailored$tailored == "y", ]
+
+
+non_tailored <- sel_tab[!sel_tab$sound.files %in% tailored$sound.files, ]
+non_tailored$tailored <- "n"
+
+
+tailored$top.freq[is.na(tailored$bottom.freq)] <- non_tailored$bottom.freq <- min(tailored$bottom.freq, na.rm = TRUE)
+tailored$top.freq[is.na(tailored$top.freq)] <- non_tailored$top.freq <- max(tailored$top.freq, na.rm = TRUE)
+
+comm_names <- intersect(names(tailored), names(non_tailored))
+
+all_sels <- rbind(tailored[, comm_names], non_tailored[, comm_names])
+
+write.csv(all_sels, "./data/processed/selection_table_entire_sound_files.csv", row.names = FALSE)
+
+
+```
+
+## Run cross-correlation
+```{r, eval = FALSE}
+
+sel_tab <- read.csv("./data/processed/selection_table_entire_sound_files.csv")
+
+xcorr <- cross_correlation(X = sel_tab, path = "./data/raw/consolidated_files/",  method = 2, parallel = 1)
+
+rownames(xcorr) <- gsub("-1$", "", rownames(xcorr))
+
+colnames(xcorr) <- gsub("-1$", "", colnames(xcorr))
+
+saveRDS(xcorr, "./data/processed/cross_correlation_matrix.RDS")
+
+# less than 0.1% were undefined
+sum(is.infinite(xcorr))/length(xcorr)
+
+# convert infinite to mean xcorr
+xcorr[is.infinite(xcorr)] <- mean(xcorr[!is.infinite(xcorr) & xcorr < 1])
+
+xcorr_mds <- cmdscale(d = as.dist(xcorr), k = 2)
+
+rownames(xcorr_mds) <- gsub("-1$", "", rownames(xcorr_mds))
+
+saveRDS(xcorr_mds, "./data/processed/cross_correlation_MDS.RDS")
+
+```
+
+# Statistical analysis
+
+Two approaches:
+
+- [Multiple Regression on distance Matrices](https://search.r-project.org/CRAN/refmans/ecodist/html/MRM.html) 
+- Partial Mantel test
+
+## Multiple Regression on distance Matrices
+
+ - Model:   
+ \begin{align*}
+ Acoustic\ dissimilarity &\sim locality + geographic\ distance
+ \end{align*}
+ - Response values scaled to make effect sizes comparable across models
+ - Locality was coded as pairwise binary matrix in which 0 means that calls in a dyad belong to the same locality and 1 means calls belong to different locality 
+
+```{r, eval = FALSE}
+
+xcorr <- readRDS("./data/processed/cross_correlation_matrix.RDS")
+
+xcorr_mds <- readRDS("./data/processed/cross_correlation_MDS.RDS")
+
+
+dat <- read.csv("./data/raw/consolidated_sound_files_CPV_contact_calls_CURATED.csv")
+
+dat <- dat[grepl("cape", dat$species, ignore.case = T) & !is.na(dat$Location.for.cluster) & !is.na(dat$Longitude.for.cluster) & !is.na(dat$Latittude.for.cluster),]
+
+dat$species <- "Cape parrot"
+
+sub_xcorr <- xcorr[rownames(xcorr) %in% dat$new_name, colnames(xcorr) %in% dat$new_name]
+sub_xcorr_mds <- xcorr_mds[rownames(xcorr_mds) %in% dat$new_name, ]
+
+sub_dat <- dat[dat$new_name %in% rownames(sub_xcorr_mds), ]
+sub_dat <- sub_dat[match(rownames(sub_xcorr), sub_dat$new_name), ]
+
+
+location <- sapply(rownames(sub_xcorr), function(x) sub_dat$Location.for.cluster[sub_dat$new_name == x])
+
+loc_bi_tri <- as.dist(binary_triangular_matrix(group = location))
+
+geo_dist <- dist(sub_dat[ , c("Latittude.for.cluster","Longitude.for.cluster")])
+
+rect_var <- cbind(as.dist(1 - sub_xcorr), geo_dist, loc_bi_tri)
+
+colnames(rect_var) <- c("fourier_xc", "geo_distance", "location")
+
+rect_var <- rect_var[!is.infinite(rect_var[, 1]), ]
+
+xc_mod <- MRM2(formula = fourier_xc ~ geo_distance + location, nperm = 10000, mat = rect_var)
+
+saveRDS(xc_mod, "./data/processed/matrix_correlation_fourier_cross_correlation.RDS")
+
+```
+
+```{r}
+
+readRDS("./data/processed/matrix_correlation_fourier_cross_correlation.RDS")
+
+```
+
+## Partial Mantel test
+
+- Evaluate association between acoustic dissimilarity and locality membership accounting for the effect of geographic distance
+```{r, eval = FALSE}
+
+xc_dist <- 1 - sub_xcorr
+xc_dist[which(is.infinite(xc_dist))] <- mean(xc_dist[-which(is.infinite(xc_dist))], na.rm = TRUE)
+
+mantel_part <- mantel.partial(ydis = xc_dist, xdis = loc_bi_tri, zdis = geo_dist)
+
+saveRDS(mantel_part, "./data/processed/partial_mantel_correlation_cross_correlation.RDS")
+
+
+```
+
+
+```{r}
+
+readRDS("./data/processed/partial_mantel_correlation_cross_correlation.RDS")
+
+```
+
+
+## Mantel correlogram at different distances
+
+```{r, eval = FALSE}
+
+geo_vect <- geo_dist[lower.tri(geo_dist)]
+geo_vect <- geo_vect[!is.na(geo_vect)]
+
+xc_dist <- 1 - sub_xcorr
+xc_dist[which(is.infinite(xc_dist))] <- mean(xc_dist[-which(is.infinite(xc_dist))], na.rm = TRUE)
+
+
+dists <- 1:10
+
+mantelcorrlg <- function(i) {
+
+    classes <- seq(0, max(geo_vect), i)
+    # length(classes)
+
+    # Run a mantel correlation on the data
+    correl_SPCC <- vegan::mantel.correlog(D.eco = xc_dist, D.geo = geo_dist,
+        break.pts = classes, cutoff = FALSE, r.type = "pearson", nperm = 1,
+        mult = "holm", progressive = FALSE)
+
+    mantel.res <- correl_SPCC$mantel.res[, 1:3]
+    mantel.res <- cbind(mantel.res, break.size = i)
+
+    return(mantel.res)
+
+}
+
+mantel_list <- warbleR:::pblapply_wrblr_int(dists, cl = 1, function(x) try(mantelcorrlg(x), silent = TRUE))
+
+mantel_list <- mantel_list[sapply(mantel_list, class) != "try-error"]
+
+
+mantel_list <- lapply(mantel_list, as.data.frame)
+
+# # Save the correlation as an .RDS file so you don't have to
+# run it multiple times in the future
+saveRDS(mantel_list, paste0("./data/processed/correl_SPCC_several_distances.RDS"))
+
+```
+
+```{r, warning=FALSE}
+mantel_list <- readRDS(paste0("./data/processed/correl_SPCC_several_distances.RDS"))
+
+mantels_df <- as.data.frame(do.call(rbind, mantel_list))
+
+combined_dists <- sort(unique(mantels_df$class.index))
+
+# interpolate
+interpol_mantel_list <- lapply(mantel_list, function(x) {
+
+    appx <- approx(x = x$class.index[x$n.dist > 0], y = x$Mantel.cor[x$n.dist >
+        0], xout = combined_dists, method = "linear")
+
+    return(appx$y)
+})
+
+
+interpol_mantel_mat <- do.call(cbind, interpol_mantel_list)
+
+
+interpol_mantel_df <- data.frame(combined_dists, mean.cor = apply(interpol_mantel_mat,
+    1, mean, na.rm = TRUE), sd.cor = apply(interpol_mantel_mat, 1,
+    sd, na.rm = TRUE))
+
+
+ggplot(data = interpol_mantel_df, mapping = aes(x = combined_dists,
+    y = mean.cor)) + geom_ribbon(data = interpol_mantel_df, aes(ymin = mean.cor -
+    sd.cor, ymax = mean.cor + sd.cor), fill = "gray", alpha = 0.3) +
+    geom_point(col = viridis(10, alpha = 0.5)[7], size = 2.5) + geom_line(col = viridis(10,
+    alpha = 0.5)[7], size = 2) + xlim(c(0, 4)) + ylim(c(-0.025,
+    0.2)) + geom_point(size = 3, color = "transparent") + theme_classic(base_size = 20) +
+    labs(x = "Pairwise geographic distance (Degrees)", y = "Correlation coefficient")
+```
+
+
+<div class="alert alert-success">
+
+# Takeaways {.unnumbered .unlisted}
+
+- Acoustic similarity is higher between calls from the same location
+- Acoustic similarity decreases with distances
+- Acoustic similarity decreases sharply after 2 degrees of distance (?)
+
+</div>
+
+&nbsp;
+
+<!-- '---' adds a gray vertical line -->
+
+---
+
+&nbsp; 
+ 
+ <!-- add packages used, system details and versions  -->
+ 
+# Session information {.unnumbered .unlisted}
+
+```{r session info, echo=F}
+
+sessionInfo()
+
+```

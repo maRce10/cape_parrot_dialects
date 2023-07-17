@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.475">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Marcelo Araya-Salas">
+<meta name="dcterms.date" content="2023-07-17">
+
+<title>Acoustic analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="acoustic_analysis_files/libs/clipboard/clipboard.min.js"></script>
+<script src="acoustic_analysis_files/libs/quarto-html/quarto.js"></script>
+<script src="acoustic_analysis_files/libs/quarto-html/popper.min.js"></script>
+<script src="acoustic_analysis_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="acoustic_analysis_files/libs/quarto-html/anchor.min.js"></script>
+<link href="acoustic_analysis_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="acoustic_analysis_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="acoustic_analysis_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="acoustic_analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="acoustic_analysis_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="qmd.css">
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#purpose" id="toc-purpose" class="nav-link active" data-scroll-target="#purpose"><span class="toc-section-number">1</span>  Purpose</a></li>
+  <li><a href="#report-overview" id="toc-report-overview" class="nav-link" data-scroll-target="#report-overview"><span class="toc-section-number">2</span>  Report overview</a></li>
+  <li><a href="#acoustic-analysis" id="toc-acoustic-analysis" class="nav-link" data-scroll-target="#acoustic-analysis"><span class="toc-section-number">3</span>  Acoustic analysis</a>
+  <ul class="collapse">
+  <li><a href="#format-data" id="toc-format-data" class="nav-link" data-scroll-target="#format-data"><span class="toc-section-number">3.1</span>  Format data</a></li>
+  <li><a href="#make-selection-table" id="toc-make-selection-table" class="nav-link" data-scroll-target="#make-selection-table"><span class="toc-section-number">3.2</span>  Make selection table</a></li>
+  <li><a href="#run-cross-correlation" id="toc-run-cross-correlation" class="nav-link" data-scroll-target="#run-cross-correlation"><span class="toc-section-number">3.3</span>  Run cross-correlation</a></li>
+  </ul></li>
+  <li><a href="#statistical-analysis" id="toc-statistical-analysis" class="nav-link" data-scroll-target="#statistical-analysis"><span class="toc-section-number">4</span>  Statistical analysis</a>
+  <ul class="collapse">
+  <li><a href="#multiple-regression-on-distance-matrices" id="toc-multiple-regression-on-distance-matrices" class="nav-link" data-scroll-target="#multiple-regression-on-distance-matrices"><span class="toc-section-number">4.1</span>  Multiple Regression on distance Matrices</a></li>
+  <li><a href="#partial-mantel-test" id="toc-partial-mantel-test" class="nav-link" data-scroll-target="#partial-mantel-test"><span class="toc-section-number">4.2</span>  Partial Mantel test</a></li>
+  <li><a href="#mantel-correlogram-at-different-distances" id="toc-mantel-correlogram-at-different-distances" class="nav-link" data-scroll-target="#mantel-correlogram-at-different-distances"><span class="toc-section-number">4.3</span>  Mantel correlogram at different distances</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Acoustic analysis</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+<p class="subtitle lead">Cape parrot vocal dialects</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p><a href="https://marce10.github.io/">Marcelo Araya-Salas</a> </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 17, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<!-- this code add line numbers to code blocks -->
+<!-- only works when code folding is not used in yaml (code_folding: show) -->
+<style>
+body
+  { counter-reset: source-line 0; }
+pre.numberSource code
+  { counter-reset: none; }
+</style>
+<div class="cell">
+
+</div>
+<p>Source code and data found at <a href=""></a></p>
+<div class="cell">
+
+</div>
+<p>&nbsp;</p>
+<!-- skyblue box -->
+<section id="purpose" class="level1 alert alert-info" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Purpose</h1>
+<ul>
+<li><p>Measure acoustic structure of cape parrot contact calls</p></li>
+<li><p>Compare acoustic dissimilarity between individuals from different localities</p></li>
+</ul>
+</section>
+<p>&nbsp;</p>
+<!-- light brown box -->
+<section id="report-overview" class="level1 alert alert-warning" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Report overview</h1>
+<ul>
+<li><a href="#acoustic-analysis">Acoustic analysis</a></li>
+<li><a href="#statistical-analysis">Statistical analysis</a></li>
+</ul>
+</section>
+<p>&nbsp;</p>
+<section id="load-packages" class="level1 unnumbered unlisted">
+<h1 class="unnumbered unlisted">Load packages</h1>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r numberLines lineAnchors code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># knitr is require for creating html/pdf/word reports formatR is</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="co"># used for soft-wrapping code</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># install/ load packages</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>sketchy<span class="sc">::</span><span class="fu">load_packages</span>(<span class="at">packages =</span> <span class="fu">c</span>(<span class="st">"knitr"</span>, <span class="st">"formatR"</span>, <span class="st">"viridis"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6"></a>    <span class="st">"warbleR"</span>, <span class="at">github =</span> <span class="st">"maRce10/PhenotypeSpace"</span>, <span class="st">"ggplot2"</span>))</span>
+<span id="cb1-7"><a href="#cb1-7"></a></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="fu">source</span>(<span class="st">"~/Dropbox/Projects/geographic_call_variation_yellow-naped_amazon/scripts/MRM2.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="acoustic-analysis" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Acoustic analysis</h1>
+<section id="format-data" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="format-data"><span class="header-section-number">3.1</span> Format data</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r numberLines lineAnchors code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"./data/raw/consolidated_sound_files_CPV_contact_calls_CURATED.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a></span>
+<span id="cb2-3"><a href="#cb2-3"></a>dat <span class="ot">&lt;-</span> dat[<span class="fu">grep</span>(<span class="st">"cape"</span>, dat<span class="sc">$</span>species, <span class="at">ignore.case =</span> T), ]</span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="fu">table</span>(dat<span class="sc">$</span>species)</span>
+<span id="cb2-5"><a href="#cb2-5"></a></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="fu">nrow</span>(dat)</span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="fu">nrow</span>(st)</span>
+<span id="cb2-8"><a href="#cb2-8"></a></span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="fu">all</span>(dat<span class="sc">$</span>new_name <span class="sc">%in%</span> st<span class="sc">$</span>sound.files)</span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="fu">table</span>(dat<span class="sc">$</span>sorted)</span>
+<span id="cb2-11"><a href="#cb2-11"></a></span>
+<span id="cb2-12"><a href="#cb2-12"></a>dat <span class="ot">&lt;-</span> dat[dat<span class="sc">$</span>sorted <span class="sc">!=</span> <span class="st">"delete"</span>, ]</span>
+<span id="cb2-13"><a href="#cb2-13"></a></span>
+<span id="cb2-14"><a href="#cb2-14"></a><span class="fu">unique</span>(dat<span class="sc">$</span>new_name)</span>
+<span id="cb2-15"><a href="#cb2-15"></a>ohun<span class="sc">::</span><span class="fu">feature_acoustic_data</span>(<span class="at">path =</span> <span class="st">"./data/raw/consolidated_files"</span>)</span>
+<span id="cb2-16"><a href="#cb2-16"></a></span>
+<span id="cb2-17"><a href="#cb2-17"></a><span class="fu">warbleR_options</span>(<span class="at">path =</span> <span class="st">"./data/raw/consolidated_files"</span>)</span>
+<span id="cb2-18"><a href="#cb2-18"></a>st <span class="ot">&lt;-</span> <span class="fu">selection_table</span>(<span class="at">whole.recs =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-19"><a href="#cb2-19"></a></span>
+<span id="cb2-20"><a href="#cb2-20"></a>st <span class="ot">&lt;-</span> st[st<span class="sc">$</span>sound.files <span class="sc">%in%</span> dat<span class="sc">$</span>new_name, ]</span>
+<span id="cb2-21"><a href="#cb2-21"></a><span class="fu">nrow</span>(st)</span>
+<span id="cb2-22"><a href="#cb2-22"></a><span class="fu">nrow</span>(dat)</span>
+<span id="cb2-23"><a href="#cb2-23"></a></span>
+<span id="cb2-24"><a href="#cb2-24"></a>st<span class="sc">$</span>sorted <span class="ot">&lt;-</span> <span class="fu">sapply</span>(st<span class="sc">$</span>sound.files, <span class="cf">function</span>(x) dat<span class="sc">$</span>sorted[dat<span class="sc">$</span>new_name <span class="sc">==</span></span>
+<span id="cb2-25"><a href="#cb2-25"></a>    x][<span class="dv">1</span>])</span>
+<span id="cb2-26"><a href="#cb2-26"></a></span>
+<span id="cb2-27"><a href="#cb2-27"></a><span class="fu">table</span>(st<span class="sc">$</span>sorted)</span>
+<span id="cb2-28"><a href="#cb2-28"></a></span>
+<span id="cb2-29"><a href="#cb2-29"></a><span class="fu">spectrograms</span>(st, <span class="at">wl =</span> <span class="dv">512</span>, <span class="at">flim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">10</span>), <span class="at">dest.path =</span> <span class="st">"./data/processed/spectrograms"</span>,</span>
+<span id="cb2-30"><a href="#cb2-30"></a>    <span class="at">pal =</span> viridis, <span class="at">collevels =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">100</span>, <span class="dv">0</span>, <span class="dv">5</span>))</span>
+<span id="cb2-31"><a href="#cb2-31"></a></span>
+<span id="cb2-32"><a href="#cb2-32"></a><span class="fu">spectrograms</span>(st[st<span class="sc">$</span>sorted <span class="sc">==</span> <span class="st">"unsorted"</span>, ], <span class="at">wl =</span> <span class="dv">512</span>, <span class="at">flim =</span> <span class="fu">c</span>(<span class="dv">0</span>,</span>
+<span id="cb2-33"><a href="#cb2-33"></a>    <span class="dv">10</span>), <span class="at">dest.path =</span> <span class="st">"./data/processed/unsorted_spectrograms"</span>, <span class="at">pal =</span> viridis,</span>
+<span id="cb2-34"><a href="#cb2-34"></a>    <span class="at">collevels =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">100</span>, <span class="dv">0</span>, <span class="dv">5</span>))</span>
+<span id="cb2-35"><a href="#cb2-35"></a></span>
+<span id="cb2-36"><a href="#cb2-36"></a></span>
+<span id="cb2-37"><a href="#cb2-37"></a><span class="fu">tailor_sels</span>(st, <span class="at">auto.next =</span> <span class="cn">TRUE</span>, <span class="at">flim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">8</span>), <span class="at">collevels =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">100</span>,</span>
+<span id="cb2-38"><a href="#cb2-38"></a>    <span class="dv">0</span>, <span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="make-selection-table" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="make-selection-table"><span class="header-section-number">3.2</span> Make selection table</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r numberLines lineAnchors code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>sel_tab <span class="ot">&lt;-</span> <span class="fu">selection_table</span>(<span class="at">path =</span> <span class="st">"./data/raw/consolidated_files/"</span>,</span>
+<span id="cb3-2"><a href="#cb3-2"></a>    <span class="at">whole.recs =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-3"><a href="#cb3-3"></a></span>
+<span id="cb3-4"><a href="#cb3-4"></a>tailored <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"./data/raw/consolidated_files/seltailor_output.csv"</span>)</span>
+<span id="cb3-5"><a href="#cb3-5"></a></span>
+<span id="cb3-6"><a href="#cb3-6"></a>tailored <span class="ot">&lt;-</span> tailored[tailored<span class="sc">$</span>tailored <span class="sc">==</span> <span class="st">"y"</span>, ]</span>
+<span id="cb3-7"><a href="#cb3-7"></a></span>
+<span id="cb3-8"><a href="#cb3-8"></a></span>
+<span id="cb3-9"><a href="#cb3-9"></a>non_tailored <span class="ot">&lt;-</span> sel_tab[<span class="sc">!</span>sel_tab<span class="sc">$</span>sound.files <span class="sc">%in%</span> tailored<span class="sc">$</span>sound.files,</span>
+<span id="cb3-10"><a href="#cb3-10"></a>    ]</span>
+<span id="cb3-11"><a href="#cb3-11"></a>non_tailored<span class="sc">$</span>tailored <span class="ot">&lt;-</span> <span class="st">"n"</span></span>
+<span id="cb3-12"><a href="#cb3-12"></a></span>
+<span id="cb3-13"><a href="#cb3-13"></a></span>
+<span id="cb3-14"><a href="#cb3-14"></a>tailored<span class="sc">$</span>top.freq[<span class="fu">is.na</span>(tailored<span class="sc">$</span>bottom.freq)] <span class="ot">&lt;-</span> non_tailored<span class="sc">$</span>bottom.freq <span class="ot">&lt;-</span> <span class="fu">min</span>(tailored<span class="sc">$</span>bottom.freq,</span>
+<span id="cb3-15"><a href="#cb3-15"></a>    <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-16"><a href="#cb3-16"></a>tailored<span class="sc">$</span>top.freq[<span class="fu">is.na</span>(tailored<span class="sc">$</span>top.freq)] <span class="ot">&lt;-</span> non_tailored<span class="sc">$</span>top.freq <span class="ot">&lt;-</span> <span class="fu">max</span>(tailored<span class="sc">$</span>top.freq,</span>
+<span id="cb3-17"><a href="#cb3-17"></a>    <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-18"><a href="#cb3-18"></a></span>
+<span id="cb3-19"><a href="#cb3-19"></a>comm_names <span class="ot">&lt;-</span> <span class="fu">intersect</span>(<span class="fu">names</span>(tailored), <span class="fu">names</span>(non_tailored))</span>
+<span id="cb3-20"><a href="#cb3-20"></a></span>
+<span id="cb3-21"><a href="#cb3-21"></a>all_sels <span class="ot">&lt;-</span> <span class="fu">rbind</span>(tailored[, comm_names], non_tailored[, comm_names])</span>
+<span id="cb3-22"><a href="#cb3-22"></a></span>
+<span id="cb3-23"><a href="#cb3-23"></a><span class="fu">write.csv</span>(all_sels, <span class="st">"./data/processed/selection_table_entire_sound_files.csv"</span>,</span>
+<span id="cb3-24"><a href="#cb3-24"></a>    <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="run-cross-correlation" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="run-cross-correlation"><span class="header-section-number">3.3</span> Run cross-correlation</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r numberLines lineAnchors code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>sel_tab <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"./data/processed/selection_table_entire_sound_files.csv"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2"></a></span>
+<span id="cb4-3"><a href="#cb4-3"></a>xcorr <span class="ot">&lt;-</span> <span class="fu">cross_correlation</span>(<span class="at">X =</span> sel_tab, <span class="at">path =</span> <span class="st">"./data/raw/consolidated_files/"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4"></a>    <span class="at">method =</span> <span class="dv">2</span>, <span class="at">parallel =</span> <span class="dv">1</span>)</span>
+<span id="cb4-5"><a href="#cb4-5"></a></span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="fu">rownames</span>(xcorr) <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"-1$"</span>, <span class="st">""</span>, <span class="fu">rownames</span>(xcorr))</span>
+<span id="cb4-7"><a href="#cb4-7"></a></span>
+<span id="cb4-8"><a href="#cb4-8"></a><span class="fu">colnames</span>(xcorr) <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"-1$"</span>, <span class="st">""</span>, <span class="fu">colnames</span>(xcorr))</span>
+<span id="cb4-9"><a href="#cb4-9"></a></span>
+<span id="cb4-10"><a href="#cb4-10"></a><span class="fu">saveRDS</span>(xcorr, <span class="st">"./data/processed/cross_correlation_matrix.RDS"</span>)</span>
+<span id="cb4-11"><a href="#cb4-11"></a></span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="co"># less than 0.1% were undefined</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="fu">sum</span>(<span class="fu">is.infinite</span>(xcorr))<span class="sc">/</span><span class="fu">length</span>(xcorr)</span>
+<span id="cb4-14"><a href="#cb4-14"></a></span>
+<span id="cb4-15"><a href="#cb4-15"></a><span class="co"># convert infinite to mean xcorr</span></span>
+<span id="cb4-16"><a href="#cb4-16"></a>xcorr[<span class="fu">is.infinite</span>(xcorr)] <span class="ot">&lt;-</span> <span class="fu">mean</span>(xcorr[<span class="sc">!</span><span class="fu">is.infinite</span>(xcorr) <span class="sc">&amp;</span> xcorr <span class="sc">&lt;</span></span>
+<span id="cb4-17"><a href="#cb4-17"></a>    <span class="dv">1</span>])</span>
+<span id="cb4-18"><a href="#cb4-18"></a></span>
+<span id="cb4-19"><a href="#cb4-19"></a>xcorr_mds <span class="ot">&lt;-</span> <span class="fu">cmdscale</span>(<span class="at">d =</span> <span class="fu">as.dist</span>(xcorr), <span class="at">k =</span> <span class="dv">2</span>)</span>
+<span id="cb4-20"><a href="#cb4-20"></a></span>
+<span id="cb4-21"><a href="#cb4-21"></a><span class="fu">rownames</span>(xcorr_mds) <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"-1$"</span>, <span class="st">""</span>, <span class="fu">rownames</span>(xcorr_mds))</span>
+<span id="cb4-22"><a href="#cb4-22"></a></span>
+<span id="cb4-23"><a href="#cb4-23"></a><span class="fu">saveRDS</span>(xcorr_mds, <span class="st">"./data/processed/cross_correlation_MDS.RDS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+</section>
+<section id="statistical-analysis" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Statistical analysis</h1>
+<p>Two approaches:</p>
+<ul>
+<li><a href="https://search.r-project.org/CRAN/refmans/ecodist/html/MRM.html">Multiple Regression on distance Matrices</a></li>
+<li>Partial Mantel test</li>
+</ul>
+<section id="multiple-regression-on-distance-matrices" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="multiple-regression-on-distance-matrices"><span class="header-section-number">4.1</span> Multiple Regression on distance Matrices</h2>
+<ul>
+<li>Model:<br>
+<span class="math display">\[\begin{align*}
+Acoustic\ dissimilarity &amp;\sim locality + geographic\ distance
+\end{align*}\]</span></li>
+<li>Response values scaled to make effect sizes comparable across models</li>
+<li>Locality was coded as pairwise binary matrix in which 0 means that calls in a dyad belong to the same locality and 1 means calls belong to different locality</li>
+</ul>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r numberLines lineAnchors code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>xcorr <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"./data/processed/cross_correlation_matrix.RDS"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2"></a></span>
+<span id="cb5-3"><a href="#cb5-3"></a>xcorr_mds <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"./data/processed/cross_correlation_MDS.RDS"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4"></a></span>
+<span id="cb5-5"><a href="#cb5-5"></a></span>
+<span id="cb5-6"><a href="#cb5-6"></a>dat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"./data/raw/consolidated_sound_files_CPV_contact_calls_CURATED.csv"</span>)</span>
+<span id="cb5-7"><a href="#cb5-7"></a></span>
+<span id="cb5-8"><a href="#cb5-8"></a>dat <span class="ot">&lt;-</span> dat[<span class="fu">grepl</span>(<span class="st">"cape"</span>, dat<span class="sc">$</span>species, <span class="at">ignore.case =</span> T) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(dat<span class="sc">$</span>Location.for.cluster) <span class="sc">&amp;</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a>    <span class="sc">!</span><span class="fu">is.na</span>(dat<span class="sc">$</span>Longitude.for.cluster) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(dat<span class="sc">$</span>Latittude.for.cluster),</span>
+<span id="cb5-10"><a href="#cb5-10"></a>    ]</span>
+<span id="cb5-11"><a href="#cb5-11"></a></span>
+<span id="cb5-12"><a href="#cb5-12"></a>dat<span class="sc">$</span>species <span class="ot">&lt;-</span> <span class="st">"Cape parrot"</span></span>
+<span id="cb5-13"><a href="#cb5-13"></a></span>
+<span id="cb5-14"><a href="#cb5-14"></a>sub_xcorr <span class="ot">&lt;-</span> xcorr[<span class="fu">rownames</span>(xcorr) <span class="sc">%in%</span> dat<span class="sc">$</span>new_name, <span class="fu">colnames</span>(xcorr) <span class="sc">%in%</span></span>
+<span id="cb5-15"><a href="#cb5-15"></a>    dat<span class="sc">$</span>new_name]</span>
+<span id="cb5-16"><a href="#cb5-16"></a>sub_xcorr_mds <span class="ot">&lt;-</span> xcorr_mds[<span class="fu">rownames</span>(xcorr_mds) <span class="sc">%in%</span> dat<span class="sc">$</span>new_name,</span>
+<span id="cb5-17"><a href="#cb5-17"></a>    ]</span>
+<span id="cb5-18"><a href="#cb5-18"></a></span>
+<span id="cb5-19"><a href="#cb5-19"></a>sub_dat <span class="ot">&lt;-</span> dat[dat<span class="sc">$</span>new_name <span class="sc">%in%</span> <span class="fu">rownames</span>(sub_xcorr_mds), ]</span>
+<span id="cb5-20"><a href="#cb5-20"></a>sub_dat <span class="ot">&lt;-</span> sub_dat[<span class="fu">match</span>(<span class="fu">rownames</span>(sub_xcorr), sub_dat<span class="sc">$</span>new_name), ]</span>
+<span id="cb5-21"><a href="#cb5-21"></a></span>
+<span id="cb5-22"><a href="#cb5-22"></a></span>
+<span id="cb5-23"><a href="#cb5-23"></a>location <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">rownames</span>(sub_xcorr), <span class="cf">function</span>(x) sub_dat<span class="sc">$</span>Location.for.cluster[sub_dat<span class="sc">$</span>new_name <span class="sc">==</span></span>
+<span id="cb5-24"><a href="#cb5-24"></a>    x])</span>
+<span id="cb5-25"><a href="#cb5-25"></a></span>
+<span id="cb5-26"><a href="#cb5-26"></a>loc_bi_tri <span class="ot">&lt;-</span> <span class="fu">as.dist</span>(<span class="fu">binary_triangular_matrix</span>(<span class="at">group =</span> location))</span>
+<span id="cb5-27"><a href="#cb5-27"></a></span>
+<span id="cb5-28"><a href="#cb5-28"></a>geo_dist <span class="ot">&lt;-</span> <span class="fu">dist</span>(sub_dat[, <span class="fu">c</span>(<span class="st">"Latittude.for.cluster"</span>, <span class="st">"Longitude.for.cluster"</span>)])</span>
+<span id="cb5-29"><a href="#cb5-29"></a></span>
+<span id="cb5-30"><a href="#cb5-30"></a>rect_var <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">as.dist</span>(<span class="dv">1</span> <span class="sc">-</span> sub_xcorr), geo_dist, loc_bi_tri)</span>
+<span id="cb5-31"><a href="#cb5-31"></a></span>
+<span id="cb5-32"><a href="#cb5-32"></a><span class="fu">colnames</span>(rect_var) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"fourier_xc"</span>, <span class="st">"geo_distance"</span>, <span class="st">"location"</span>)</span>
+<span id="cb5-33"><a href="#cb5-33"></a></span>
+<span id="cb5-34"><a href="#cb5-34"></a>rect_var <span class="ot">&lt;-</span> rect_var[<span class="sc">!</span><span class="fu">is.infinite</span>(rect_var[, <span class="dv">1</span>]), ]</span>
+<span id="cb5-35"><a href="#cb5-35"></a></span>
+<span id="cb5-36"><a href="#cb5-36"></a>xc_mod <span class="ot">&lt;-</span> <span class="fu">MRM2</span>(<span class="at">formula =</span> fourier_xc <span class="sc">~</span> geo_distance <span class="sc">+</span> location, <span class="at">nperm =</span> <span class="dv">10000</span>,</span>
+<span id="cb5-37"><a href="#cb5-37"></a>    <span class="at">mat =</span> rect_var)</span>
+<span id="cb5-38"><a href="#cb5-38"></a></span>
+<span id="cb5-39"><a href="#cb5-39"></a><span class="fu">saveRDS</span>(xc_mod, <span class="st">"./data/processed/matrix_correlation_fourier_cross_correlation.RDS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r numberLines lineAnchors code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">readRDS</span>(<span class="st">"./data/processed/matrix_correlation_fourier_cross_correlation.RDS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>$coef
+              fourier_xc  pval
+Int          0.509998283 1e+00
+geo_distance 0.008486815 1e-04
+location     0.019311192 1e-04
+
+$r.squared
+        R2       pval 
+0.05628384 0.00010000 
+
+$F.test
+          F      F.pval 
+585320.5561      0.0001 </code></pre>
+</div>
+</div>
+</section>
+<section id="partial-mantel-test" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="partial-mantel-test"><span class="header-section-number">4.2</span> Partial Mantel test</h2>
+<ul>
+<li>Evaluate association between acoustic dissimilarity and locality membership accounting for the effect of geographic distance</li>
+</ul>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r numberLines lineAnchors code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>xc_dist <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> sub_xcorr</span>
+<span id="cb8-2"><a href="#cb8-2"></a>xc_dist[<span class="fu">which</span>(<span class="fu">is.infinite</span>(xc_dist))] <span class="ot">&lt;-</span> <span class="fu">mean</span>(xc_dist[<span class="sc">-</span><span class="fu">which</span>(<span class="fu">is.infinite</span>(xc_dist))],</span>
+<span id="cb8-3"><a href="#cb8-3"></a>    <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-4"><a href="#cb8-4"></a></span>
+<span id="cb8-5"><a href="#cb8-5"></a>mantel_part <span class="ot">&lt;-</span> <span class="fu">mantel.partial</span>(<span class="at">ydis =</span> xc_dist, <span class="at">xdis =</span> loc_bi_tri, <span class="at">zdis =</span> geo_dist)</span>
+<span id="cb8-6"><a href="#cb8-6"></a></span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="fu">saveRDS</span>(mantel_part, <span class="st">"./data/processed/partial_mantel_correlation_cross_correlation.RDS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r numberLines lineAnchors code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">readRDS</span>(<span class="st">"./data/processed/partial_mantel_correlation_cross_correlation.RDS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Partial Mantel statistic based on Pearson's product-moment correlation 
+
+Call:
+mantel.partial(xdis = loc_bi_tri, ydis = xc_dist, zdis = geo_dist) 
+
+Mantel statistic r: 0.05181 
+      Significance: 0.001 
+
+Upper quantiles of permutations (null model):
+    90%     95%   97.5%     99% 
+0.00598 0.00831 0.00937 0.01076 
+Permutation: free
+Number of permutations: 999</code></pre>
+</div>
+</div>
+</section>
+<section id="mantel-correlogram-at-different-distances" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="mantel-correlogram-at-different-distances"><span class="header-section-number">4.3</span> Mantel correlogram at different distances</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r numberLines lineAnchors code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>geo_vect <span class="ot">&lt;-</span> geo_dist[<span class="fu">lower.tri</span>(geo_dist)]</span>
+<span id="cb11-2"><a href="#cb11-2"></a>geo_vect <span class="ot">&lt;-</span> geo_vect[<span class="sc">!</span><span class="fu">is.na</span>(geo_vect)]</span>
+<span id="cb11-3"><a href="#cb11-3"></a></span>
+<span id="cb11-4"><a href="#cb11-4"></a>xc_dist <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> sub_xcorr</span>
+<span id="cb11-5"><a href="#cb11-5"></a>xc_dist[<span class="fu">which</span>(<span class="fu">is.infinite</span>(xc_dist))] <span class="ot">&lt;-</span> <span class="fu">mean</span>(xc_dist[<span class="sc">-</span><span class="fu">which</span>(<span class="fu">is.infinite</span>(xc_dist))],</span>
+<span id="cb11-6"><a href="#cb11-6"></a>    <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-7"><a href="#cb11-7"></a></span>
+<span id="cb11-8"><a href="#cb11-8"></a></span>
+<span id="cb11-9"><a href="#cb11-9"></a>dists <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span></span>
+<span id="cb11-10"><a href="#cb11-10"></a></span>
+<span id="cb11-11"><a href="#cb11-11"></a>mantelcorrlg <span class="ot">&lt;-</span> <span class="cf">function</span>(i) {</span>
+<span id="cb11-12"><a href="#cb11-12"></a></span>
+<span id="cb11-13"><a href="#cb11-13"></a>    classes <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="fu">max</span>(geo_vect), i)</span>
+<span id="cb11-14"><a href="#cb11-14"></a>    <span class="co"># length(classes)</span></span>
+<span id="cb11-15"><a href="#cb11-15"></a></span>
+<span id="cb11-16"><a href="#cb11-16"></a>    <span class="co"># Run a mantel correlation on the data</span></span>
+<span id="cb11-17"><a href="#cb11-17"></a>    correl_SPCC <span class="ot">&lt;-</span> vegan<span class="sc">::</span><span class="fu">mantel.correlog</span>(<span class="at">D.eco =</span> xc_dist, <span class="at">D.geo =</span> geo_dist,</span>
+<span id="cb11-18"><a href="#cb11-18"></a>        <span class="at">break.pts =</span> classes, <span class="at">cutoff =</span> <span class="cn">FALSE</span>, <span class="at">r.type =</span> <span class="st">"pearson"</span>, <span class="at">nperm =</span> <span class="dv">1</span>,</span>
+<span id="cb11-19"><a href="#cb11-19"></a>        <span class="at">mult =</span> <span class="st">"holm"</span>, <span class="at">progressive =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-20"><a href="#cb11-20"></a></span>
+<span id="cb11-21"><a href="#cb11-21"></a>    mantel.res <span class="ot">&lt;-</span> correl_SPCC<span class="sc">$</span>mantel.res[, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]</span>
+<span id="cb11-22"><a href="#cb11-22"></a>    mantel.res <span class="ot">&lt;-</span> <span class="fu">cbind</span>(mantel.res, <span class="at">break.size =</span> i)</span>
+<span id="cb11-23"><a href="#cb11-23"></a></span>
+<span id="cb11-24"><a href="#cb11-24"></a>    <span class="fu">return</span>(mantel.res)</span>
+<span id="cb11-25"><a href="#cb11-25"></a></span>
+<span id="cb11-26"><a href="#cb11-26"></a>}</span>
+<span id="cb11-27"><a href="#cb11-27"></a></span>
+<span id="cb11-28"><a href="#cb11-28"></a>mantel_list <span class="ot">&lt;-</span> warbleR<span class="sc">:::</span><span class="fu">pblapply_wrblr_int</span>(dists, <span class="at">cl =</span> <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="fu">try</span>(<span class="fu">mantelcorrlg</span>(x),</span>
+<span id="cb11-29"><a href="#cb11-29"></a>    <span class="at">silent =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb11-30"><a href="#cb11-30"></a></span>
+<span id="cb11-31"><a href="#cb11-31"></a>mantel_list <span class="ot">&lt;-</span> mantel_list[<span class="fu">sapply</span>(mantel_list, class) <span class="sc">!=</span> <span class="st">"try-error"</span>]</span>
+<span id="cb11-32"><a href="#cb11-32"></a></span>
+<span id="cb11-33"><a href="#cb11-33"></a></span>
+<span id="cb11-34"><a href="#cb11-34"></a>mantel_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(mantel_list, as.data.frame)</span>
+<span id="cb11-35"><a href="#cb11-35"></a></span>
+<span id="cb11-36"><a href="#cb11-36"></a><span class="co"># # Save the correlation as an .RDS file so you don't have to</span></span>
+<span id="cb11-37"><a href="#cb11-37"></a><span class="co"># run it multiple times in the future</span></span>
+<span id="cb11-38"><a href="#cb11-38"></a><span class="fu">saveRDS</span>(mantel_list, <span class="fu">paste0</span>(<span class="st">"./data/processed/correl_SPCC_several_distances.RDS"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r numberLines lineAnchors code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>mantel_list <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">paste0</span>(<span class="st">"./data/processed/correl_SPCC_several_distances.RDS"</span>))</span>
+<span id="cb12-2"><a href="#cb12-2"></a></span>
+<span id="cb12-3"><a href="#cb12-3"></a>mantels_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">do.call</span>(rbind, mantel_list))</span>
+<span id="cb12-4"><a href="#cb12-4"></a></span>
+<span id="cb12-5"><a href="#cb12-5"></a>combined_dists <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(mantels_df<span class="sc">$</span>class.index))</span>
+<span id="cb12-6"><a href="#cb12-6"></a></span>
+<span id="cb12-7"><a href="#cb12-7"></a><span class="co"># interpolate</span></span>
+<span id="cb12-8"><a href="#cb12-8"></a>interpol_mantel_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(mantel_list, <span class="cf">function</span>(x) {</span>
+<span id="cb12-9"><a href="#cb12-9"></a></span>
+<span id="cb12-10"><a href="#cb12-10"></a>    appx <span class="ot">&lt;-</span> <span class="fu">approx</span>(<span class="at">x =</span> x<span class="sc">$</span>class.index[x<span class="sc">$</span>n.dist <span class="sc">&gt;</span> <span class="dv">0</span>], <span class="at">y =</span> x<span class="sc">$</span>Mantel.cor[x<span class="sc">$</span>n.dist <span class="sc">&gt;</span></span>
+<span id="cb12-11"><a href="#cb12-11"></a>        <span class="dv">0</span>], <span class="at">xout =</span> combined_dists, <span class="at">method =</span> <span class="st">"linear"</span>)</span>
+<span id="cb12-12"><a href="#cb12-12"></a></span>
+<span id="cb12-13"><a href="#cb12-13"></a>    <span class="fu">return</span>(appx<span class="sc">$</span>y)</span>
+<span id="cb12-14"><a href="#cb12-14"></a>})</span>
+<span id="cb12-15"><a href="#cb12-15"></a></span>
+<span id="cb12-16"><a href="#cb12-16"></a></span>
+<span id="cb12-17"><a href="#cb12-17"></a>interpol_mantel_mat <span class="ot">&lt;-</span> <span class="fu">do.call</span>(cbind, interpol_mantel_list)</span>
+<span id="cb12-18"><a href="#cb12-18"></a></span>
+<span id="cb12-19"><a href="#cb12-19"></a></span>
+<span id="cb12-20"><a href="#cb12-20"></a>interpol_mantel_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(combined_dists, <span class="at">mean.cor =</span> <span class="fu">apply</span>(interpol_mantel_mat,</span>
+<span id="cb12-21"><a href="#cb12-21"></a>    <span class="dv">1</span>, mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">sd.cor =</span> <span class="fu">apply</span>(interpol_mantel_mat, <span class="dv">1</span>,</span>
+<span id="cb12-22"><a href="#cb12-22"></a>    sd, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb12-23"><a href="#cb12-23"></a></span>
+<span id="cb12-24"><a href="#cb12-24"></a></span>
+<span id="cb12-25"><a href="#cb12-25"></a><span class="fu">ggplot</span>(<span class="at">data =</span> interpol_mantel_df, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> combined_dists,</span>
+<span id="cb12-26"><a href="#cb12-26"></a>    <span class="at">y =</span> mean.cor)) <span class="sc">+</span> <span class="fu">geom_ribbon</span>(<span class="at">data =</span> interpol_mantel_df, <span class="fu">aes</span>(<span class="at">ymin =</span> mean.cor <span class="sc">-</span></span>
+<span id="cb12-27"><a href="#cb12-27"></a>    sd.cor, <span class="at">ymax =</span> mean.cor <span class="sc">+</span> sd.cor), <span class="at">fill =</span> <span class="st">"gray"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb12-28"><a href="#cb12-28"></a>    <span class="fu">geom_point</span>(<span class="at">col =</span> <span class="fu">viridis</span>(<span class="dv">10</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>)[<span class="dv">7</span>], <span class="at">size =</span> <span class="fl">2.5</span>) <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">col =</span> <span class="fu">viridis</span>(<span class="dv">10</span>,</span>
+<span id="cb12-29"><a href="#cb12-29"></a>    <span class="at">alpha =</span> <span class="fl">0.5</span>)[<span class="dv">7</span>], <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span> <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">4</span>)) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.025</span>, <span class="fl">0.2</span>)) <span class="sc">+</span></span>
+<span id="cb12-30"><a href="#cb12-30"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"transparent"</span>) <span class="sc">+</span> <span class="fu">theme_classic</span>(<span class="at">base_size =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb12-31"><a href="#cb12-31"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Pairwise geographic distance (Degrees)"</span>, <span class="at">y =</span> <span class="st">"Correlation coefficient"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="acoustic_analysis_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="takeaways" class="level1 unnumbered unlisted alert alert-success">
+<h1 class="unnumbered unlisted">Takeaways</h1>
+<ul>
+<li>Acoustic similarity is higher between calls from the same location</li>
+<li>Acoustic similarity decreases with distances</li>
+<li>Acoustic similarity decreases sharply after 2 degrees of distance (?)</li>
+</ul>
+</section>
+<p>&nbsp;</p>
+<!-- '---' adds a gray vertical line -->
+<hr>
+<p>&nbsp;</p>
+<p><!-- add packages used, system details and versions  --></p>
+<section id="session-information" class="level1 unnumbered unlisted">
+<h1 class="unnumbered unlisted">Session information</h1>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.1.0 (2021-05-18)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Ubuntu 20.04.2 LTS
+
+Matrix products: default
+BLAS:   /usr/lib/x86_64-linux-gnu/atlas/libblas.so.3.10.3
+LAPACK: /usr/lib/x86_64-linux-gnu/atlas/liblapack.so.3.10.3
+
+locale:
+ [1] LC_CTYPE=pt_BR.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=es_CR.UTF-8        LC_COLLATE=pt_BR.UTF-8    
+ [5] LC_MONETARY=es_CR.UTF-8    LC_MESSAGES=pt_BR.UTF-8   
+ [7] LC_PAPER=es_CR.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=es_CR.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] ggplot2_3.4.2        PhenotypeSpace_0.1.0 warbleR_1.1.28      
+ [4] NatureSounds_1.0.4   seewave_2.2.0        tuneR_1.4.4         
+ [7] viridis_0.6.3        viridisLite_0.4.2    formatR_1.11        
+[10] knitr_1.43          
+
+loaded via a namespace (and not attached):
+ [1] splines_4.1.0         jsonlite_1.8.7        brio_1.1.3           
+ [4] assertthat_0.2.1      sp_1.5-1              spatstat.geom_2.2-2  
+ [7] yaml_2.3.7            remotes_2.4.2         pillar_1.9.0         
+[10] lattice_0.21-8        glue_1.6.2            digest_0.6.32        
+[13] polyclip_1.10-0       colorspace_2.1-0      htmltools_0.5.5      
+[16] Matrix_1.5-4.1        spatstat.sparse_2.0-0 pkgconfig_2.0.3      
+[19] raster_3.4-13         spatstat.core_2.3-0   scales_1.2.1         
+[22] tensor_1.5            spatstat.utils_2.2-0  dtw_1.23-1           
+[25] tibble_3.2.1          proxy_0.4-27          mgcv_1.8-42          
+[28] farver_2.1.1          generics_0.1.3        sketchy_1.0.2        
+[31] withr_2.5.0           pbapply_1.7-2         cli_3.6.1            
+[34] magrittr_2.0.3        crayon_1.5.2          deldir_0.2-10        
+[37] evaluate_0.21         fansi_1.0.4           nlme_3.1-162         
+[40] MASS_7.3-60           vegan_2.5-7           tools_4.1.0          
+[43] lifecycle_1.0.3       fftw_1.0-7            munsell_0.5.0        
+[46] cluster_2.1.2         packrat_0.9.0         compiler_4.1.0       
+[49] signal_0.7-7          rlang_1.1.1           grid_4.1.0           
+[52] RCurl_1.98-1.12       rstudioapi_0.14       rjson_0.2.21         
+[55] htmlwidgets_1.5.4     goftest_1.2-2         labeling_0.4.2       
+[58] bitops_1.0-7          rmarkdown_2.23        testthat_3.1.9       
+[61] xaringanExtra_0.7.0   gtable_0.3.3          codetools_0.2-18     
+[64] abind_1.4-5           DBI_1.1.3             R6_2.5.1             
+[67] gridExtra_2.3         dplyr_1.0.10          fastmap_1.1.1        
+[70] utf8_1.2.3            rprojroot_2.0.3       permute_0.9-5        
+[73] stringi_1.7.12        spatstat.data_2.1-0   parallel_4.1.0       
+[76] Rcpp_1.0.11           vctrs_0.6.3           rpart_4.1-15         
+[79] tidyselect_1.2.0      xfun_0.39            </code></pre>
+</div>
+</div>
+<!-- -->
+
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<pre class="markdown" data-shortcodes="false"><code>---
+title: Acoustic analysis
+subtitle: Cape parrot vocal dialects
+author: &lt;a href="https://marce10.github.io/"&gt;Marcelo Araya-Salas&lt;/a&gt;
+date: "`r Sys.Date()`"
+toc: true
+toc-depth: 2
+toc-location: left
+number-sections: true
+highlight-style: pygments
+format:
+  html:
+    df-print: kable
+    code-fold: true
+    code-tools: true
+    css: qmd.css
+editor_options: 
+  chunk_output_type: console
+---
+
+
+&lt;!-- this code add line numbers to code blocks --&gt;
+&lt;!-- only works when code folding is not used in yaml (code_folding: show) --&gt;
+
+```{=html}
+&lt;style&gt;
+body
+  { counter-reset: source-line 0; }
+pre.numberSource code
+  { counter-reset: none; }
+&lt;/style&gt;
+```
+
+```{r set root directory, echo = FALSE}
+
+# set working directory as project directory or one directory above,
+rootdir &lt;- try(rprojroot::find_rstudio_root_file(), silent = TRUE)
+if (is(rootdir, "try-error")) rootdir &lt;-  ".."
+knitr::opts_knit$set(root.dir = rootdir)
+
+```
+
+```{r add link to github repo, echo = FALSE, results='asis'}
+
+# print link to github repo if any
+if (file.exists("./.git/config")){
+  config &lt;- readLines("./.git/config")
+  url &lt;- grep("url",  config, value = TRUE)
+  url &lt;- gsub("\\turl = |.git$", "", url)
+  cat("\nSource code and data found at [", url, "](", url, ")", sep = "")
+  }
+
+```
+
+```{r setup style, echo = FALSE, message = FALSE, warning=FALSE}
+
+# options to customize chunk outputs
+knitr::opts_chunk$set(
+  class.source = "numberLines lineAnchors", # for code line numbers
+  tidy.opts = list(width.cutoff = 65), 
+  tidy = TRUE,
+  message = FALSE
+ )
+
+```
+
+
+&amp;nbsp; 
+
+&lt;!-- skyblue box --&gt;
+
+&lt;div class="alert alert-info"&gt;
+
+# Purpose
+
+- Measure acoustic structure of cape parrot contact calls
+
+- Compare acoustic dissimilarity between individuals from different localities
+
+&lt;/div&gt;
+
+&amp;nbsp; 
+
+
+&lt;!-- light brown box --&gt;
+&lt;div class="alert alert-warning"&gt;
+
+# Report overview
+
+  - [Acoustic analysis](#acoustic-analysis)
+  - [Statistical analysis](#statistical-analysis)
+
+&lt;/div&gt;
+
+&amp;nbsp;
+
+
+# Load packages {.unnumbered .unlisted}
+
+```{r load packages}
+
+# knitr is require for creating html/pdf/word reports
+# formatR is used for soft-wrapping code
+
+# install/ load packages
+sketchy::load_packages(packages = c("knitr", "formatR", "viridis", "warbleR", github = "maRce10/PhenotypeSpace", "ggplot2"))
+
+source("~/Dropbox/Projects/geographic_call_variation_yellow-naped_amazon/scripts/MRM2.R")
+
+```
+
+# Acoustic analysis
+
+## Format data
+```{r, eval = FALSE}
+
+dat &lt;- read.csv("./data/raw/consolidated_sound_files_CPV_contact_calls_CURATED.csv")
+
+dat &lt;- dat[grep("cape", dat$species, ignore.case = T),]
+table(dat$species)
+
+nrow(dat)
+nrow(st)
+
+all(dat$new_name %in% st$sound.files)
+table(dat$sorted)
+
+dat &lt;- dat[dat$sorted != "delete", ]
+
+unique(dat$new_name)
+ohun::feature_acoustic_data(path = "./data/raw/consolidated_files")
+
+warbleR_options(path = "./data/raw/consolidated_files")
+st &lt;-selection_table(whole.recs = TRUE)
+
+st &lt;- st[st$sound.files %in% dat$new_name, ]
+nrow(st)
+nrow(dat)
+
+st$sorted &lt;- sapply(st$sound.files, function(x) dat$sorted[dat$new_name == x][1])
+
+table(st$sorted)
+
+spectrograms(st, wl = 512, flim = c(0, 10), dest.path = "./data/processed/spectrograms", pal =  viridis, collevels = seq(-100, 0, 5))
+
+spectrograms(st[st$sorted == "unsorted", ], wl = 512, flim = c(0, 10), dest.path = "./data/processed/unsorted_spectrograms", pal =  viridis, collevels = seq(-100, 0, 5))
+
+
+tailor_sels(st, auto.next = TRUE, flim = c(0, 8), collevels = seq(-100, 0, 5))
+
+```
+
+## Make selection table
+```{r, eval = FALSE}
+
+sel_tab &lt;- selection_table(path = "./data/raw/consolidated_files/", whole.recs = TRUE)
+
+tailored &lt;- read.csv("./data/raw/consolidated_files/seltailor_output.csv")
+
+tailored &lt;- tailored[tailored$tailored == "y", ]
+
+
+non_tailored &lt;- sel_tab[!sel_tab$sound.files %in% tailored$sound.files, ]
+non_tailored$tailored &lt;- "n"
+
+
+tailored$top.freq[is.na(tailored$bottom.freq)] &lt;- non_tailored$bottom.freq &lt;- min(tailored$bottom.freq, na.rm = TRUE)
+tailored$top.freq[is.na(tailored$top.freq)] &lt;- non_tailored$top.freq &lt;- max(tailored$top.freq, na.rm = TRUE)
+
+comm_names &lt;- intersect(names(tailored), names(non_tailored))
+
+all_sels &lt;- rbind(tailored[, comm_names], non_tailored[, comm_names])
+
+write.csv(all_sels, "./data/processed/selection_table_entire_sound_files.csv", row.names = FALSE)
+
+
+```
+
+## Run cross-correlation
+```{r, eval = FALSE}
+
+sel_tab &lt;- read.csv("./data/processed/selection_table_entire_sound_files.csv")
+
+xcorr &lt;- cross_correlation(X = sel_tab, path = "./data/raw/consolidated_files/",  method = 2, parallel = 1)
+
+rownames(xcorr) &lt;- gsub("-1$", "", rownames(xcorr))
+
+colnames(xcorr) &lt;- gsub("-1$", "", colnames(xcorr))
+
+saveRDS(xcorr, "./data/processed/cross_correlation_matrix.RDS")
+
+# less than 0.1% were undefined
+sum(is.infinite(xcorr))/length(xcorr)
+
+# convert infinite to mean xcorr
+xcorr[is.infinite(xcorr)] &lt;- mean(xcorr[!is.infinite(xcorr) &amp; xcorr &lt; 1])
+
+xcorr_mds &lt;- cmdscale(d = as.dist(xcorr), k = 2)
+
+rownames(xcorr_mds) &lt;- gsub("-1$", "", rownames(xcorr_mds))
+
+saveRDS(xcorr_mds, "./data/processed/cross_correlation_MDS.RDS")
+
+```
+
+# Statistical analysis
+
+Two approaches:
+
+- [Multiple Regression on distance Matrices](https://search.r-project.org/CRAN/refmans/ecodist/html/MRM.html) 
+- Partial Mantel test
+
+## Multiple Regression on distance Matrices
+
+ - Model:   
+ \begin{align*}
+ Acoustic\ dissimilarity &amp;\sim locality + geographic\ distance
+ \end{align*}
+ - Response values scaled to make effect sizes comparable across models
+ - Locality was coded as pairwise binary matrix in which 0 means that calls in a dyad belong to the same locality and 1 means calls belong to different locality 
+
+```{r, eval = FALSE}
+
+xcorr &lt;- readRDS("./data/processed/cross_correlation_matrix.RDS")
+
+xcorr_mds &lt;- readRDS("./data/processed/cross_correlation_MDS.RDS")
+
+
+dat &lt;- read.csv("./data/raw/consolidated_sound_files_CPV_contact_calls_CURATED.csv")
+
+dat &lt;- dat[grepl("cape", dat$species, ignore.case = T) &amp; !is.na(dat$Location.for.cluster) &amp; !is.na(dat$Longitude.for.cluster) &amp; !is.na(dat$Latittude.for.cluster),]
+
+dat$species &lt;- "Cape parrot"
+
+sub_xcorr &lt;- xcorr[rownames(xcorr) %in% dat$new_name, colnames(xcorr) %in% dat$new_name]
+sub_xcorr_mds &lt;- xcorr_mds[rownames(xcorr_mds) %in% dat$new_name, ]
+
+sub_dat &lt;- dat[dat$new_name %in% rownames(sub_xcorr_mds), ]
+sub_dat &lt;- sub_dat[match(rownames(sub_xcorr), sub_dat$new_name), ]
+
+
+location &lt;- sapply(rownames(sub_xcorr), function(x) sub_dat$Location.for.cluster[sub_dat$new_name == x])
+
+loc_bi_tri &lt;- as.dist(binary_triangular_matrix(group = location))
+
+geo_dist &lt;- dist(sub_dat[ , c("Latittude.for.cluster","Longitude.for.cluster")])
+
+rect_var &lt;- cbind(as.dist(1 - sub_xcorr), geo_dist, loc_bi_tri)
+
+colnames(rect_var) &lt;- c("fourier_xc", "geo_distance", "location")
+
+rect_var &lt;- rect_var[!is.infinite(rect_var[, 1]), ]
+
+xc_mod &lt;- MRM2(formula = fourier_xc ~ geo_distance + location, nperm = 10000, mat = rect_var)
+
+saveRDS(xc_mod, "./data/processed/matrix_correlation_fourier_cross_correlation.RDS")
+
+```
+
+quarto-executable-code-5450563D
+
+```r
+readRDS("./data/processed/matrix_correlation_fourier_cross_correlation.RDS")
+
+```
+
+## Partial Mantel test
+
+- Evaluate association between acoustic dissimilarity and locality membership accounting for the effect of geographic distance
+```{r, eval = FALSE}
+
+xc_dist &lt;- 1 - sub_xcorr
+xc_dist[which(is.infinite(xc_dist))] &lt;- mean(xc_dist[-which(is.infinite(xc_dist))], na.rm = TRUE)
+
+mantel_part &lt;- mantel.partial(ydis = xc_dist, xdis = loc_bi_tri, zdis = geo_dist)
+
+saveRDS(mantel_part, "./data/processed/partial_mantel_correlation_cross_correlation.RDS")
+
+
+```
+
+
+quarto-executable-code-5450563D
+
+```r
+readRDS("./data/processed/partial_mantel_correlation_cross_correlation.RDS")
+
+```
+
+
+## Mantel correlogram at different distances
+
+```{r, eval = FALSE}
+
+geo_vect &lt;- geo_dist[lower.tri(geo_dist)]
+geo_vect &lt;- geo_vect[!is.na(geo_vect)]
+
+xc_dist &lt;- 1 - sub_xcorr
+xc_dist[which(is.infinite(xc_dist))] &lt;- mean(xc_dist[-which(is.infinite(xc_dist))], na.rm = TRUE)
+
+
+dists &lt;- 1:10
+
+mantelcorrlg &lt;- function(i) {
+
+    classes &lt;- seq(0, max(geo_vect), i)
+    # length(classes)
+
+    # Run a mantel correlation on the data
+    correl_SPCC &lt;- vegan::mantel.correlog(D.eco = xc_dist, D.geo = geo_dist,
+        break.pts = classes, cutoff = FALSE, r.type = "pearson", nperm = 1,
+        mult = "holm", progressive = FALSE)
+
+    mantel.res &lt;- correl_SPCC$mantel.res[, 1:3]
+    mantel.res &lt;- cbind(mantel.res, break.size = i)
+
+    return(mantel.res)
+
+}
+
+mantel_list &lt;- warbleR:::pblapply_wrblr_int(dists, cl = 1, function(x) try(mantelcorrlg(x), silent = TRUE))
+
+mantel_list &lt;- mantel_list[sapply(mantel_list, class) != "try-error"]
+
+
+mantel_list &lt;- lapply(mantel_list, as.data.frame)
+
+# # Save the correlation as an .RDS file so you don't have to
+# run it multiple times in the future
+saveRDS(mantel_list, paste0("./data/processed/correl_SPCC_several_distances.RDS"))
+
+```
+
+```{r, warning=FALSE}
+mantel_list &lt;- readRDS(paste0("./data/processed/correl_SPCC_several_distances.RDS"))
+
+mantels_df &lt;- as.data.frame(do.call(rbind, mantel_list))
+
+combined_dists &lt;- sort(unique(mantels_df$class.index))
+
+# interpolate
+interpol_mantel_list &lt;- lapply(mantel_list, function(x) {
+
+    appx &lt;- approx(x = x$class.index[x$n.dist &gt; 0], y = x$Mantel.cor[x$n.dist &gt;
+        0], xout = combined_dists, method = "linear")
+
+    return(appx$y)
+})
+
+
+interpol_mantel_mat &lt;- do.call(cbind, interpol_mantel_list)
+
+
+interpol_mantel_df &lt;- data.frame(combined_dists, mean.cor = apply(interpol_mantel_mat,
+    1, mean, na.rm = TRUE), sd.cor = apply(interpol_mantel_mat, 1,
+    sd, na.rm = TRUE))
+
+
+ggplot(data = interpol_mantel_df, mapping = aes(x = combined_dists,
+    y = mean.cor)) + geom_ribbon(data = interpol_mantel_df, aes(ymin = mean.cor -
+    sd.cor, ymax = mean.cor + sd.cor), fill = "gray", alpha = 0.3) +
+    geom_point(col = viridis(10, alpha = 0.5)[7], size = 2.5) + geom_line(col = viridis(10,
+    alpha = 0.5)[7], size = 2) + xlim(c(0, 4)) + ylim(c(-0.025,
+    0.2)) + geom_point(size = 3, color = "transparent") + theme_classic(base_size = 20) +
+    labs(x = "Pairwise geographic distance (Degrees)", y = "Correlation coefficient")
+```
+
+
+&lt;div class="alert alert-success"&gt;
+
+# Takeaways {.unnumbered .unlisted}
+
+- Acoustic similarity is higher between calls from the same location
+- Acoustic similarity decreases with distances
+- Acoustic similarity decreases sharply after 2 degrees of distance (?)
+
+&lt;/div&gt;
+
+&amp;nbsp;
+
+&lt;!-- '---' adds a gray vertical line --&gt;
+
+---
+
+&amp;nbsp; 
+ 
+ &lt;!-- add packages used, system details and versions  --&gt;
+ 
+# Session information {.unnumbered .unlisted}
+
+```{r session info, echo=F}
+
+sessionInfo()
+
+```</code></pre>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+</body></html>
